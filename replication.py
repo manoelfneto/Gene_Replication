@@ -26,9 +26,41 @@ def FrequentWords(Text, K):
             maximum_words.append(i)
     return maximum_words
 
+def Reverse(Text):
+    reversed = ""
+    for i in range(len(Text)-1, -1, -1):
+        reversed += str(Text[i])
+    return reversed
+
+def Complement(Text):
+    complement = ""
+    for i in Text:
+        if i == "A":
+            complement += "T"
+        elif i == "T":
+            complement += "A"
+        elif i == "C":
+            complement += "G"
+        elif i == "G":
+            complement += "C"
+    return complement
+
+def ReverseComplement(Text):
+    pattern = Reverse(Text) 
+    pattern = Complement(pattern) 
+    return pattern
+
+def PatternMatching(Pattern, Genome):
+    positions = []
+    for i in range (len(Genome)-len(Pattern)+1):
+        if Genome[i:i+len(Pattern)] == Pattern:
+            positions.append(i)
+    positions.sort()
+    return positions
+
+
 vibrio_cholerae = "ATCAATGATCAACGTAAGCTTCTAAGCATGATCAAGGTGCTCACACAGTTTATCCACAACCTGAGTGGATGACATCAAGATAGGTCGTTGTATCTCCTTCCTCTCGTACTCTCATGACCACGGAAAGATGATCAAGAGAGGATGATTTCTTGGCCATATCGCAATGAATACTTGTGACTTGTGCTTCCAATTGACATCTTCAGCGCCATATTGCGCTGGCCAAGGTGACGGAGCGGGATTACGAAAGCATGATCATGGCTGTTGTTCTGTTTATCTTGTTTTGACTGAGACTTGTTAGGATAGACGGTTTTTCATCACTGACTAGCCAAAGCCTTACTCTGCCTGACATCGACCGTAAATTGATAATGAATTTACATGCTTCCGCGACGATTTACCTCTTGATCATCGATCCGATTGAAGATCTTCAATTGTTAATTCTCTTGCCTCGACTCATAGCCATGATGAGCTCTTGATCATGTTTCCTTAACCCTCTATTTTTTACGGAAGAATGATCAAGCTGCTGCTCTTGATCATCGTTTC"
+texto_pequeno = "CTTGATCATCTTGATCATCTTGATCAT" 
+padrão = "CTTGATCAT"
 
-print(FrequentWords(vibrio_cholerae, 9))
-
-
-
+print(PatternMatching(padrão,vibrio_cholerae))
