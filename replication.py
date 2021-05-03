@@ -96,3 +96,48 @@ def FasterSymbolArray(Genome, symbol):
             array[i] = array[i]+1
     return array
 
+def SkewArray (Genome):
+    skew = [0]
+    for i in range(len(Genome)):
+        if Genome[i] == "A" or Genome[i] == "T":
+            skew.append(skew[i])
+        elif Genome[i] == "G":
+            skew.append(skew[i]+1)
+        elif Genome[i] == "C":
+            skew.append(skew[i]-1)
+    return skew
+
+def MinimumSkew(Genome):
+    positions = []
+    values = SkewArray(Genome)
+    minimum = min(values)
+    for i in range(len(values)):
+        if values[i] == minimum:
+            positions.append(i)
+    return positions
+
+def HammingDistance(p, q):
+    count = 0
+    for i in range(len(p)):
+        if p[i] != q[i]:
+            count += 1
+    return count
+
+def ApproximatePatternMatching(Text, Pattern, d):
+    positions = []
+    for i in range(len(Text)-len(Pattern)+1):
+        if HammingDistance(Text[i:i+len(Pattern)], Pattern) <= d:
+            positions.append(i)
+    return positions
+
+def ApproximatePatternCount (Pattern, Text , d):
+    count = 0
+    for i in range(len(Text)-len(Pattern)+1):
+        if HammingDistance(Text[i:i+len(Pattern)], Pattern) <= d:
+            count += 1
+    return count
+
+a=list(range(5))
+b=a
+a[2]=12
+print(b)
