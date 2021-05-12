@@ -43,6 +43,39 @@ def Score(Motifs):
                 final_sum += 1
     return final_sum
             
+def Pr(Text, Profile):
+    probability = 1
+    for i in range(len(Text)):
+        probability = probability * Profile[Text[i]][i]
+    return probability
 
-teste = ["AACGTA", "CCCGTT", "CACCTT", "GGATTA", "TTCCGG"]
-print(Score(teste))
+def ProfileMostProbableKmer(Text, k, Profile):
+    max_probability = 0
+    most_probable = Text[:k]
+    n = len(Text)
+    for i in range(n - k + 1):
+        kmer = Text[i: i + k]
+        probability = Pr(kmer, Profile)
+        if probability > max_probability:
+            max_probability = probability
+            most_probable = kmer
+    return most_probable
+    
+def GreedyMotifSearch(Dna, k, t):
+    BestMotifs = []
+    for i in range(0, t):
+        BestMotifs.append(Dna[i][0:k])
+    n = len(Dna[0])
+    for i in range(n-k+1):
+        Motifs = []
+        Motifs.append(Dna[0][i:i+k])
+        for j in range(1, t):
+            P = Profile(Motifs[0:j])
+            Motifs.append(ProfileMostProbableKmer(Dna[j], k, P))
+        if Score(Motifs) < Score(BestMotifs):
+                BestMotifs = Motifs
+    return BestMotifs
+
+
+teste = {'A':[0.4, 0.3, 0.0,  0.1,  0.0,  0.9], 'C':  [0.2,  0.3,  0.0,  0.4,  0.0,  0.1], 'T': [ 0.3,  0.1,  0.0,  0.4,  0.5,  0.0], 'G': [0.1,  0.3,  1.0,  0.1,  0.5,  0.0],}
+print(Pr("AAGTTC",teste))
