@@ -1,3 +1,5 @@
+import random
+
 def Count (motifs):
     count = {}
     k = len(motifs[0])
@@ -76,6 +78,77 @@ def GreedyMotifSearch(Dna, k, t):
                 BestMotifs = Motifs
     return BestMotifs
 
+def CountWithPseudocounts(Motifs):
+    pseudo = {}
+    k = len(Motifs[0])
+    for i in "ACGT":
+        pseudo[i] = []
+        for j in range(k):
+            pseudo[i].append(1)
+    t = len(Motifs)
+    for x in range(t):
+        for y in range(k):
+            symbol = Motifs[x][y]
+            pseudo[symbol][y] += 1
+    return pseudo
+
+def ProfileWithPseudocounts(Motifs):
+    contPseudo = CountWithPseudocounts(Motifs)
+    for i in range(len(Motifs[0])):
+        su=0
+        for symbol in "ACGT":
+            su = su + contPseudo[symbol][i]
+        for symbol in "ACGT":
+            contPseudo[symbol][i] = contPseudo[symbol][i] / su
+    profile = contPseudo
+    return profile
+
+def GreedyMotifSearchWithPseudocounts(Dna, k, t):
+    BestMotifs = []
+    for i in range(0, t):
+        BestMotifs.append(Dna[i][0:k])
+    n = len(Dna[0])
+    for i in range(n-k+1):
+        Motifs = []
+        Motifs.append(Dna[0][i:i+k])
+        for j in range(1, t):
+            P = ProfileWithPseudocounts(Motifs[0:j])
+            Motifs.append(ProfileMostProbableKmer(Dna[j], k, P))
+        if Score(Motifs) < Score(BestMotifs):
+                BestMotifs = Motifs
+    return BestMotifs
+
+def Motifs(Profile, Dna):
+    motifs = []
+    t = len(Dna)
+    k = len(Profile['A'])
+    for i in range(t):
+        motif = ProfileMostProbableKmer(Dna[i], k, Profile)
+        motifs.append(motif)
+    return motifs
+
+def RandomMotifs(Dna, k, t):
+    t = len(Dna)
+    l = len(Dna[0])
+    RandomMotif =[]
+    for i in range(t):
+        r = random.randint(1,l-k) 
+        RandomMotif.append(Dna[i][r:r+k])
+    return RandomMotif
+
+def RandomizedMotifSearch(Dna, k, t):
+    M = RandomMotifs(Dna, k, t)
+    BestMotifs = M
+    while True:
+        Profile = ProfileWithPseudocounts(M)
+        M = Motifs(Profile, Dna)
+        if Score(M) < Score(BestMotifs):
+            BestMotifs = M
+        else:
+            return BestMotifs
+
+
+{'A': [2, 3, 2, 1, 1, 3], 'C': [3, 2, 5, 3, 1, 1], 'G': [2, 2, 1, 3, 2, 2], 'T': [2, 2, 1, 2, 5, 3]}
 
 teste = {'A':[0.4, 0.3, 0.0,  0.1,  0.0,  0.9], 'C':  [0.2,  0.3,  0.0,  0.4,  0.0,  0.1], 'T': [ 0.3,  0.1,  0.0,  0.4,  0.5,  0.0], 'G': [0.1,  0.3,  1.0,  0.1,  0.5,  0.0],}
 print(Pr("AAGTTC",teste))
