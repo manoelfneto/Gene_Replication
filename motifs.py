@@ -147,8 +147,33 @@ def RandomizedMotifSearch(Dna, k, t):
         else:
             return BestMotifs
 
+def Normalize(Probabilities):
+    probabil = {}
+    soma = 0
+    probabil = Probabilities
+    for x in Probabilities:
+        soma += Probabilities[x]
+    for i in probabil:
+        probabil[i] = probabil[i] / soma 
+    return probabil
 
-{'A': [2, 3, 2, 1, 1, 3], 'C': [3, 2, 5, 3, 1, 1], 'G': [2, 2, 1, 3, 2, 2], 'T': [2, 2, 1, 2, 5, 3]}
+def WeightedDie(Probabilities):
+    count = 0
+    p = random.uniform(0,1)
+    for keys,values in Probabilities.items():
+        count = count +values
+        if p < count:
+            return keys
 
-teste = {'A':[0.4, 0.3, 0.0,  0.1,  0.0,  0.9], 'C':  [0.2,  0.3,  0.0,  0.4,  0.0,  0.1], 'T': [ 0.3,  0.1,  0.0,  0.4,  0.5,  0.0], 'G': [0.1,  0.3,  1.0,  0.1,  0.5,  0.0],}
-print(Pr("AAGTTC",teste))
+def ProfileGeneratedString(Text, profile, k):
+    n = len(Text)
+    probabilities = {} 
+    for i in range(0,n-k+1):
+        probabilities[Text[i:i+k]] = Pr(Text[i:i+k], profile)
+    probabilities = Normalize(probabilities)
+    return WeightedDie(probabilities)
+
+def GibbsSampler()
+        
+entrada = {'A': 0.1, 'C': 0.1, 'G': 0.1, 'T': 0.1}
+print(WeightedDie(entrada))
