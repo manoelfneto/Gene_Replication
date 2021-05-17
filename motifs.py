@@ -137,7 +137,8 @@ def RandomMotifs(Dna, k, t):
     return RandomMotif
 
 def RandomizedMotifSearch(Dna, k, t):
-    M = RandomMotifs(Dna, k, t)
+   # M = RandomMotifs(Dna, k, t)
+    M = ['GCT']
     BestMotifs = M
     while True:
         Profile = ProfileWithPseudocounts(M)
@@ -151,9 +152,9 @@ def Normalize(Probabilities):
     probabil = {}
     soma = 0
     probabil = Probabilities
-    for x in Probabilities:
+    for x in range(len(Probabilities)):
         soma += Probabilities[x]
-    for i in probabil:
+    for i in range(len(probabil)):
         probabil[i] = probabil[i] / soma 
     return probabil
 
@@ -173,7 +174,26 @@ def ProfileGeneratedString(Text, profile, k):
     probabilities = Normalize(probabilities)
     return WeightedDie(probabilities)
 
-def GibbsSampler()
+def GibbsSampler(Dna, k, t, N):
+    bestMotifs = []
+    Motifs = RandomMotifs(Dna, k, t)
+    bestMotifs = Motifs.copy()
+    for x in range(N):
+        i = random.randint(0, t-1)
+        del Motifs[i]
+        profile = ProfileWithPseudocounts(Motifs)
+        Motifs.insert(i, ProfileGeneratedString(Dna[i], profile, k))
+        if Score(Motifs) < Score(bestMotifs):
+            bestMotifs = Motifs
+    return bestMotifs
+
+
         
-entrada = {'A': 0.1, 'C': 0.1, 'G': 0.1, 'T': 0.1}
-print(WeightedDie(entrada))
+dna = ['AAGCCAAA','AATCCTGG','GCTACTTG','ATGTTTTG']
+prob = [0.22, 0.54, 0.58, 0.36, 0.3]
+
+#print(RandomizedMotifSearch(dna, 3, 'GCT'))
+
+print(Normalize(prob))
+print(Motifs(Profile(['CCA','CCT','CTT','TTG']), dna))
+
